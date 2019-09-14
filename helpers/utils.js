@@ -57,8 +57,8 @@ exports.calDistance = (lat1, lat2, lon1, lon2) => {
   return d
 },
 
-exports.handleError = (res, code, message) => {
-  console.log(message)
+exports.handleError = (res, code, message, err) => {
+  console.log(err)
   return res.status(parseInt(code, 10)).json({
     status: 'error',
     message

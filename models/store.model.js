@@ -11,8 +11,8 @@ const StoreSchema = new Schema (
     zip_code: { type: Schema.Types.String, required: true },
     geo: {
       type: {
-        type: String, // Don't do `{ location: { type: String } }`
-        enum: ['Point'], // 'location.type' must be 'Point'
+        type: String, 
+        enum: ['Point'], 
         required: true
       },
       coordinates: {
@@ -20,16 +20,12 @@ const StoreSchema = new Schema (
         required: true
       }
      },
-    // latitude: { type: Schema.Types.String, required: true },
-    // longitude: { type: Schema.Types.String, required: true },
     county: { type: Schema.Types.String, required: true },
     __v: { type: Number, select: false }
   },
   { timestamps: true }, { toObject: { virtuals: true }, toJSON: { virtuals: true } }
 )
 StoreSchema.index({ "geo": "2dsphere"});
-// StoreSchema.createIndex({"location": '2dsphere'});
-// db.stores.createIndex({ "location": "2dsphere"})
 const Store = model('Store', StoreSchema)
 
 module.exports = Store

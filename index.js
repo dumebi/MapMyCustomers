@@ -21,7 +21,6 @@ app.use(cookieParser());
 app.use(cors());
 app.use(compression());
 app.use(flash());
-// app.use(logRequest);
 
 /* Application Routes */
 app.use('/', require('./routes'));
