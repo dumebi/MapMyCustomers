@@ -1,5 +1,3 @@
-const nodemailer = require('nodemailer');
-// const Constants = require('http-s')
 require('dotenv').config();
 
 exports.config = {

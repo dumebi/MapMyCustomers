@@ -47,7 +47,7 @@ services:
       - APP_NAME="mapmycustomers_test" # For Bunyan
       - MONGO_LAB_DEV=mongodb://mongo/mapmycustomers_test
       - NODE_ENV=production
-      - API_KEY='AIzaSyCQz-4BVOJd1kTCBkn7FDTy9hlxHzEkB2A'
+      - API_KEY=AIzaSyCQz-4BVOJd1kTCBkn7FDTy9hlxHzEkB2A
       # - REDIS_URL=redis://redis
       # - AMQP_URL=amqp://rabbitmq
       - PORT=3000
