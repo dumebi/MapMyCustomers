@@ -8,7 +8,8 @@ exports.config = {
   host: '',
   amqp_url: '',
   port: '',
-  redis: ''
+  redis: '',
+  API_KEY: process.env.API_KEY
 }
 
 console.log(process.env.MONGO_LAB_DEV, process.env.MONGO_LAB_PROD)

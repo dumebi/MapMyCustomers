@@ -1,15 +1,14 @@
 const StoreModel = require('../models/store.model');
 const HttpStatus = require('http-status-codes');
 const {
-  handleError, handleSuccess, toKm, calDistance
+  handleError, handleSuccess, toKm, calDistance, config
 } = require('../helpers/utils');
-const API_KEY = 'AIzaSyCQz-4BVOJd1kTCBkn7FDTy9hlxHzEkB2A'
 var NodeGeocoder = require('node-geocoder');
  
 var options = {
   provider: 'google', 
   httpAdapter: 'https', // Default
-  apiKey: API_KEY, // for Mapquest, OpenCage, Google Premier
+  apiKey: config.API_KEY, // for Mapquest, OpenCage, Google Premier
   formatter: null         // 'gpx', 'string', ...
 };
 
