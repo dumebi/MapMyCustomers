@@ -1,15 +1,15 @@
 version: '3'
 services:
-  redis:
-    image: 'redis:latest'
-    restart: always
-    # container_name: test-redis
-    networks:
-      - test
-    ports:
-      - 6379:6379
-    volumes:
-      - ./external/redis:/data
+  # redis:
+  #   image: 'redis:latest'
+  #   restart: always
+  #   # container_name: test-redis
+  #   networks:
+  #     - test
+  #   ports:
+  #     - 6379:6379
+  #   volumes:
+  #     - ./external/redis:/data
 
   mongo:
     image: 'mongo:latest'
@@ -22,19 +22,19 @@ services:
     volumes:
       - ./external/mongo:/data
 
-  rabbitmq:
-    image: 'rabbitmq:latest'
-    restart: always
-    # container_name: test-rabbitmq
-    networks:
-      - test
-    ports:
-      - 5672:5672
-    volumes:
-      - ./external/rabbitmq:/data
+  # rabbitmq:
+  #   image: 'rabbitmq:latest'
+  #   restart: always
+  #   # container_name: test-rabbitmq
+  #   networks:
+  #     - test
+  #   ports:
+  #     - 5672:5672
+  #   volumes:
+  #     - ./external/rabbitmq:/data
 
   backend:
-    container_name: test-biblotech
+    container_name: test-mapmycustomers
     restart: always
     build: 
       dockerfile: Dockerfile
@@ -43,20 +43,17 @@ services:
       - .:/app
       - /app/node_modules
     environment:
-      - JWT_SECRET=mysuperjwtsecret
-      - APP_NAME="biblotech_test"
-      - MONGO_LAB_PROD=mongodb+srv://dikejude49:dyke2010@cluster0-edqiz.mongodb.net/backend_test
-      - MONGO_LAB_DEV=mongodb://mongo/biblotech_test
+      - JWT_SECRET=mysuperjwtsecret # JWT
+      - APP_NAME="mapmycustomers_test" # For Bunyan
+      - MONGO_LAB_DEV=mongodb://mongo/mapmycustomers_test
       - NODE_ENV=production
-      - REDIS_URL=redis://redis
-      - AMQP_URL=amqp://rabbitmq
+      # - REDIS_URL=redis://redis
+      # - AMQP_URL=amqp://rabbitmq
       - PORT=3000
-    links:
-      - rabbitmq
     depends_on:
       - mongo
-      - redis
-      - rabbitmq
+      # - redis
+      # - rabbitmq
     networks:
       - test
     command: npm run dev

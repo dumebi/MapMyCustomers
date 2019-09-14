@@ -2,22 +2,16 @@
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
-const logger = require('./helpers/logger');
 const cors = require('cors');
 const compression = require('compression');
 const flash = require('connect-flash');
 const {
-  logRequest
-} = require('./helpers/middleware');
-const {
   handleError
 } = require('./helpers/utils');
-
+const {seedStores} = require('./helpers/seed');
 const app = express();
 require('dotenv').config();
 require('./helpers/connection').mongo();
-require('./helpers/connection').rabbitmq();
-require('./helpers/connection').subscribe();
 
 // Midelware stack
 app.use(express.json());
@@ -34,8 +28,12 @@ app.use('/', require('./routes'));
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
-  logger.logAPIResponse(req, res);
   return handleError(res, 404, 'Page Not Found')
 });
+
+(async () => {
+  const csvFilePath = './store-locations.csv'
+  await seedStores(csvFilePath)
+})()
 
 app.listen(3000, () => console.log(`Open http://localhost:3000 to see a response.`));

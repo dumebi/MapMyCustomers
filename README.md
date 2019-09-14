@@ -1,63 +1,47 @@
-# Express Coding Challenge
-The premise of this challenge is to see the approach you take to:
-- Use an ORM to interact with a simple database model
-- Create a basic routing mechanism for HTTP requests
-- Authenticate a user’s access to a route
-- Respond to a request in a consistent and logical manner
-- Test your work with both unit tests and integration tests.
+# Coding challenge
 
-Please clone this repository and send through your completed coding challenge using whatever you feel fit. We'll take a look and then have a chat about the decisions you took and challenges you encountered. Thanks for taking the time.
+In this folder there is store-locations.csv
 
-## Results
+This is a tabular dataset of the locations of every store of a major national retail chain.
 
-```Collection: https://www.getpostman.com/collections/5df9f47b5c743cfc5e0b```
+# Deliverables
 
-Start using `docker-compose up --build`
+Write a simple server that can query the dataset and find the nearest store to a provided address or zip code
 
-To run tests, comment out backend service in `docker-compose.yml`. 
-Start using `docker-compose up --build`, then in a seperate terminal, run `npm run test`
+```
+Find Store
+  Your server will locate the nearest store (as the crow flies) from
+  store-locations.csv, return the matching store address, as well as
+  the distance to that store in JSON format
 
-## Challenge
-1. Use [Sequelize](http://docs.sequelizejs.com/manual/installation/getting-started) or [Mongoose](https://mongoosejs.com/) to define:
+Usage:
+  {server}/closest?zip=<zip>
+  {server}/closest?address=<address>
+  {server}/closest?zip=<zip>&units=<(mi|km)>
 
-   1.1. A **`User`** model which should have basic identifying information:
-      - Name
-      - Email address
-      - Role (Acceptable entries: ‘student’, ‘academic’, ‘administrator’)
-      - Password.
+Options:
+  ?zip=<zip>            Find nearest store to this zip code. If there are multiple best-matches, return the first.
+  ?address=<address>  Find nearest store to this address. If there are multiple best-matches, return the first.
+  ?units=(mi|km)        Display units in miles or kilometers [default: mi]
 
-   1.2. An **`Institution`** model which stores information about a school:
-      - Name
-      - URL
-      - Email domain.
-      
-   1.3. A **`Book`** model which stores information about books:
-      - ISBN
-      - Title
-      - Author.
-      
-   1.4. Relationships between **`Users`** and **`Institutions`**, and **`Books`** and **`Institutions`** (Consider #4.3 in the relationships you create).
-2. Use [Express](https://expressjs.com/) to respond to requests.
-3. Create a test suite which includes code coverage, to unit and integration test the routes you’ve created.
-4. Create routes:
+Note:
+  addresses should be encoded for the URI
+```
 
-    4.1 `POST /users/signin` Use the passport library to authenticate a user and respond with a successful message that uses the [JSend](https://labs.omniti.com/labs/jsend) framework
-    
-    4.2 `POST /users/create` Creates a user and based on the user’s email domain links them to an institution. Denies creation of a user if their domain does not exist.
-    
-    4.3 `GET /books` Once authenticated, responds with a JSON object containing a list of Books that the user has access to via their Institution.
-5. (Optional) Provide a [Postman](https://www.getpostman.com/) collection which performs some basically functionality on the routes you've created.
+Additionally:
 
-## Things to keep in mind
-- Security
-- Scalability
-- Consistency
-- Testing.
+- Please write up a paragraph or two about how your solution works, any assumptions or caveats, and put it in a readme file.
+- Your solution should be well-tested in the testing framework of your choice. Commit the test suite to your repo.
+- The output format is not rigidly specified. Use your judgement for json formats.
 
-## Running this application
-You can run the application by typing:
-`npm install` followed by `npm start` 
+Send a github link to the final project.
 
-## The structure of this repository
-The structure of this repository should be relatively self-explanatory. 
-Use the appropriate directory for your code. A basic example has been provided for the index route.
+# Notes
+
+Please complete this challenge using Node.js and focus on the problem itself (rather than framework/scaffolding). Please make sure it's reasonably easy to run your code and there are clear instructions for doing so.
+
+You will need to use an external geocoding service. However please implement the distance calculation in your own code. To the extent you need any algorithms, I'm not expecting you to invent anything from scratch, so use Google & external libraries judiciously, and cite/document appropriately.
+
+You can add polish or extra features if you'd like, but remember that software is about tradeoffs and *by far the most important thing is delivering working, practical software that solves the problem of finding the closest store location*. The goal is not to take up a bunch of your time, but see you solve a problem that looks very much like the type of work we do all the time.
+
+There are a ton of different ways to skin this cat -- be smart, be practical, thanks, and good luck!

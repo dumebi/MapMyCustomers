@@ -1,5 +1,5 @@
 const amqp = require('amqplib');
-const HttpStatus = require('./status')
+const HttpStatus = require('http-status-codes')
 
 const RabbitMQ = {
   connection: '',

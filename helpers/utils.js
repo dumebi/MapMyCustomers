@@ -1,7 +1,5 @@
 const nodemailer = require('nodemailer');
-const jwt = require('jsonwebtoken')
-const Constants = require('./status')
-const UserModel = require('../models/user.js');
+// const Constants = require('http-s')
 require('dotenv').config();
 
 exports.config = {
@@ -18,152 +16,53 @@ console.log(process.env.MONGO_LAB_DEV, process.env.MONGO_LAB_PROD)
 if (process.env.NODE_ENV === 'development') {
   this.config.mongo = `${process.env.MONGO_LAB_DEV}`
   this.config.host = `http://localhost:${process.env.PORT}/`
-  this.config.db = 'biblotech_test'
+  this.config.db = 'mapmucustomers_test'
   this.config.amqp_url = `${process.env.AMQP_URL}`
   this.config.port = `${process.env.PORT}`
+  this.config.redis = `${process.env.REDIS_URL}`
 } else {
   this.config.mongo = `${process.env.MONGO_LAB_PROD}`
-  this.config.host = `https://vast-reef-55707.herokuapp.com/v1/`
-  this.config.db = 'biblotech_test'
+  this.config.host = `http://localhost:${process.env.PORT}/`
+  this.config.db = 'mapmucustomers_test'
   this.config.amqp_url = `${process.env.CLOUDAMQP_URL}`
   this.config.port = `${process.env.PORT}`
   this.config.redis = `${process.env.REDIS_URL}`
 }
 
 console.log(this.config)
-exports.sendMail = (params, callback) => {
-  const email = params.email;
-  // let from_email = params.from_email;
-  const body = params.body;
-  const subject = params.subject;
-  if (email == null || body == null || subject == null) {
-    return {
-      status: 'failed',
-      err: 'the required parameters were not supplied'
-    };
-  }
-  const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465,
-    auth: {
-      user: 'dikejude49@gmail.com',
-      pass: '*******'
-    }
-  });
 
-  const mailOptions = {
-    from: 'Biblotech Support <support@biblotech.com>',
-    to: email,
-    subject,
-    html: body
-  };
+// Convert degrees to radians
+exports.deg2rad = (deg) => {
+  return deg * (Math.PI/180)
+},
 
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      callback(error, null);
-    } else {
-      callback(error, info.response);
-    }
-  });
-};
+// Convert miles to km
+exports.toKm = (miles) => {
+  return miles * 1.60934
+},
 
-exports.generateTransactionReference = (x) => {
-  let text = ''
-  const possible = '0123456789'
-  for (let i = 0; i < (x || 15); i++) text += possible.charAt(Math.floor(Math.random() * possible.length))
-  return ''.concat(text)
-}
+// Havesine Formula
+exports.calDistance = (lat1, lat2, lon1, lon2) => {
+  var R = 3958.8; // Radius of the earth in km
+  var φ1 = this.deg2rad(lat1);
+  var φ2 = this.deg2rad(lat2);
+  var Δφ = this.deg2rad(lat2-lat1);
+  var Δλ = this.deg2rad(lon2-lon1);
 
-const paramsNotValid = (...args) => args
-  .map(param => param !== undefined && param != null && param !== '')
-  .includes(false)
-exports.paramsNotValid = paramsNotValid
+  var a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+          Math.cos(φ1) * Math.cos(φ2) *
+          Math.sin(Δλ/2) * Math.sin(Δλ/2);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 
-exports.paramsNotValidChecker = (...args) => args.map(
-  (param) => `${param} : ${param !== undefined && param != null && param !== '' ? true : `${param} is required`}`
-)
-
-/**
- * Check token was sent
- */
-exports.checkToken = async (req) => {
-  try {
-    let token = null;
-    if (req.headers.authorization) {
-      token = req.headers.authorization;
-      const tokenArray = token.split(' ');
-      token = tokenArray[1];
-    }
-    if (req.query.token) {
-      token = req.query.token;
-    }
-    if (req.body.token) {
-      token = req.body.token
-    }
-    if (!token) {
-      return {
-        status: 'failed',
-        data: Constants.UNAUTHORIZED,
-        message: 'Not authorized'
-      };
-    }
-    const decryptedToken = await jwt.verify(token, this.config.jwt);
-    // console.log(decryptedToken)
-    const user = await UserModel.findById(decryptedToken.id)
-    if(user){
-      return {
-        status: 'success',
-        data: user
-      }
-    }
-    return {
-      status: 'failed',
-      data: Constants.UNAUTHORIZED,
-      message: 'Invalid token'
-    };
-  } catch (error) {
-    console.log(error)
-    if (error.name === 'TokenExpiredError') {
-      return {
-        status: 'failed',
-        data: Constants.UNAUTHORIZED,
-        message: 'Token expired'
-      };
-    }
-    return {
-      status: 'failed',
-      data: Constants.UNAUTHORIZED,
-      message: 'failed to authenticate token'
-    }
-  }
-};
-
-/**
- * Create Jwt token
- */
-exports.createToken = (email, id) => {
-  try {
-    const jwtToken = jwt.sign({ email, id }, this.config.jwt, { expiresIn: 60 * 60 * 24 });
-    return jwtToken
-  } catch (error) {
-    return false;
-  }
-};
-
+  var d = R * c;
+  return d
+},
 
 exports.handleError = (res, code, message) => {
   console.log(message)
   return res.status(parseInt(code, 10)).json({
     status: 'error',
     message
-  })
-}
-
-exports.handleFail = (res, code, data) => {
-  console.log(data)
-  return res.status(parseInt(code, 10)).json({
-    status: 'fail',
-    data
   })
 }
 
