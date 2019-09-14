@@ -1,3 +1,18 @@
+
+# Solution
+1. I start with seeding all data into a mongoose database on the start of the application, while seeding I create each store latitude and longtitude in a mongodb Geocode format.
+
+2. Next, in my application controller I make use of `node-geocoder` library to convert zipcodes and addresses to Geocodable latitude and longitude using whatever query parameter is passed
+
+3. I get the `latitude` and `longitude` from step 2 above, then use mongodb's `$near` method to fetch from my database the closest stores to these coordinates, I return the closest one.
+
+4. Distance between `latitude` and `longitude` of step 2 and the stores coordinates is calculated in miles, using `calcDistance` function in `helpers/utils` <br> This is calculated usng the `Havesine Formula` for Geometric distance
+
+# Run
+To run the app, 
+1. Have `docker` and `docker-compose` installed
+2. run ``` docker-compose up --build ```
+3. to run tests, while the application is running, run ``` npm run test ```
 # Coding challenge
 
 In this folder there is store-locations.csv

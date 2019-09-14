@@ -37,7 +37,7 @@ const StoreController = {
       // const count = await StoreModel.estimatedDocumentCount({})
       // console.log('count ', count)
       const store = await StoreModel.findOne({
-        location: {
+        geo: {
          $near: {
           $geometry: {
            type: "Point",
@@ -50,13 +50,13 @@ const StoreController = {
        if(!store) return handleError(res, HttpStatus.BAD_REQUEST, 'we do not have any stores available around this area', null)
       //  console.log(store)
 
-      let distance = calDistance(code.latitude, store.location.coordinates[1], code.longitude, store.location.coordinates[0])
+      let distance = calDistance(code.latitude, store.geo.coordinates[1], code.longitude, store.geo.coordinates[0])
       units = units ? units : 'mi' 
       distance = units == 'km' ?  toKm(distance) : distance
       // console.log('stores %o', distance)
-      return handleSuccess(res, HttpStatus.OK, {store, distance, units}, 'stores gotten successfully')
+      return handleSuccess(res, HttpStatus.OK, { name: store.name, address: store.address, city: store.city, state: store.state, county: store.county, distance, units}, 'stores gotten successfully')
     } catch (error) {
-      // console.log(error)
+      console.log(error)
       return handleError(res, HttpStatus.INTERNAL_SERVER_ERROR, 'An error occured getting all stores, please contact an administrator', error)
     }
   },

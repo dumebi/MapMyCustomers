@@ -5,10 +5,11 @@ const StoreSchema = new Schema (
     name: { type: Schema.Types.String, required: true },
     location: { type: Schema.Types.String, required: true },
     address: { type: Schema.Types.String, required: true },
+    location: { type: Schema.Types.String, required: true },
     city: { type: Schema.Types.String, required: true },
     state: { type: Schema.Types.String, required: true },
     zip_code: { type: Schema.Types.String, required: true },
-    location: {
+    geo: {
       type: {
         type: String, // Don't do `{ location: { type: String } }`
         enum: ['Point'], // 'location.type' must be 'Point'
@@ -26,7 +27,7 @@ const StoreSchema = new Schema (
   },
   { timestamps: true }, { toObject: { virtuals: true }, toJSON: { virtuals: true } }
 )
-StoreSchema.index({ "location": "2dsphere"});
+StoreSchema.index({ "geo": "2dsphere"});
 // StoreSchema.createIndex({"location": '2dsphere'});
 // db.stores.createIndex({ "location": "2dsphere"})
 const Store = model('Store', StoreSchema)
