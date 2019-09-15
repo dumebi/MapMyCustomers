@@ -31,7 +31,8 @@ const StoreController = {
 
       let code = await geocoder.geocode(query)
       code = code[0]
-      if(!code) return handleError(res, HttpStatus.BAD_REQUEST, 'zip code does not exist', null)
+      const zip_address_message = zip ? 'zip code does not exist' : 'address does not exist' 
+      if(!code) return handleError(res, HttpStatus.BAD_REQUEST, zip_address_message, null)
       
       // Mongodb's coordinate comparison
       const store = await StoreModel.findOne({
