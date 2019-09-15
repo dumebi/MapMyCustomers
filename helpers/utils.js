@@ -2,33 +2,11 @@ require('dotenv').config();
 
 exports.config = {
   jwt: process.env.JWT_SECRET,
-  mongo: '',
-  host: '',
-  amqp_url: '',
-  port: '',
-  redis: '',
+  mongo: `${process.env.MONGO_LAB_DEV}`,
+  host: `http://localhost:${process.env.PORT}/`,
+  port: `${process.env.PORT}`,
   API_KEY: process.env.API_KEY
 }
-
-console.log(process.env.MONGO_LAB_DEV, process.env.MONGO_LAB_PROD)
-
-if (process.env.NODE_ENV === 'development') {
-  this.config.mongo = `${process.env.MONGO_LAB_DEV}`
-  this.config.host = `http://localhost:${process.env.PORT}/`
-  this.config.db = 'mapmucustomers_test'
-  this.config.amqp_url = `${process.env.AMQP_URL}`
-  this.config.port = `${process.env.PORT}`
-  this.config.redis = `${process.env.REDIS_URL}`
-} else {
-  this.config.mongo = `${process.env.MONGO_LAB_PROD}`
-  this.config.host = `http://localhost:${process.env.PORT}/`
-  this.config.db = 'mapmucustomers_test'
-  this.config.amqp_url = `${process.env.CLOUDAMQP_URL}`
-  this.config.port = `${process.env.PORT}`
-  this.config.redis = `${process.env.REDIS_URL}`
-}
-
-console.log(this.config)
 
 // Convert degrees to radians
 exports.deg2rad = (deg) => {

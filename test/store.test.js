@@ -84,6 +84,42 @@ describe('Biblotech Test', () => {
       })
   }).timeout(10000)
 
+  it('Should flag wrong zipcode', (done) => {
+    api
+      .get(`closest?zip=655637748`)
+      .set('Accept', 'application/json')
+      .expect(200)
+      .end((err, res) => {
+        expect(res.body.status).to.equal('error')
+        expect(res.body.message).to.equal('zip code does not exist')
+        done()
+      })
+  }).timeout(10000)
+
+  it('Should flag no query parameter passed', (done) => {
+    api
+      .get(`closest`)
+      .set('Accept', 'application/json')
+      .expect(200)
+      .end((err, res) => {
+        expect(res.body.status).to.equal('error')
+        expect(res.body.message).to.equal('"Query" must contain at least one of [zip, address]' )
+        done()
+      })
+  }).timeout(10000)
+
+  it('Should flag wrong query parameter passed', (done) => {
+    api
+      .get(`closest?zipaddress=100`)
+      .set('Accept', 'application/json')
+      .expect(200)
+      .end((err, res) => {
+        expect(res.body.status).to.equal('error')
+        expect(res.body.message).to.equal('"zipaddress" is not allowed')
+        done()
+      })
+  }).timeout(10000)
+
   it('Should calculate correct havesine distance between two geometric points', async () => {
     try {
       // Distance from lagos to abuja as the crow flies
