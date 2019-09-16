@@ -32,7 +32,7 @@ app.use((req, res, next) => {
 
 (async () => {
   const csvFilePath = './store-locations.csv'
-  await seedStores(csvFilePath)
+  const stores = await seedStores(csvFilePath)
 })()
 
 app.listen(3000, () => console.log(`Open http://localhost:3000 to see a response.`));

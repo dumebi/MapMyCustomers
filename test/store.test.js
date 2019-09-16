@@ -29,7 +29,44 @@ describe('Biblotech Test', () => {
       })
   }).timeout(10000)
 
+  it('Should query using zipcode (pure javascript)', (done) => {
+    api
+      .get(`closest?zip=55811-1810`)
+      .set('Accept', 'application/json')
+      .expect(200)
+      .end((err, res) => {
+        expect(res.body.status).to.equal('success')
+        expect(res.body.data.name).to.equal('Duluth')
+        expect(res.body.data.address).to.equal('1902 Miller Trunk Hwy')
+        expect(res.body.data.city).to.equal('Duluth')
+        expect(res.body.data.state).to.equal('MN')
+        expect(res.body.data.county).to.equal('St Louis County')
+        expect(res.body.data.distance).to.not.equal(null)
+        expect(res.body.data.units).to.equal('mi')
+        done()
+      })
+  }).timeout(10000)
+
+
   it('Should query using address', (done) => {
+    api
+      .get(`closest?address=${encodeURI('731 Lawrence St. San Angelo, TX 76901')}`)
+      .set('Accept', 'application/json')
+      .expect(200)
+      .end((err, res) => {
+        expect(res.body.status).to.equal('success')
+        expect(res.body.data.name).to.not.equal(null)
+        expect(res.body.data.address).to.not.equal(null)
+        expect(res.body.data.city).to.not.equal(null)
+        expect(res.body.data.state).to.not.equal(null)
+        expect(res.body.data.county).to.not.equal(null)
+        expect(res.body.data.distance).to.not.equal(null)
+        expect(res.body.data.units).to.equal('mi')
+        done()
+      })
+  }).timeout(10000)
+
+  it('Should query using address (pure javascript)', (done) => {
     api
       .get(`closest?address=${encodeURI('731 Lawrence St. San Angelo, TX 76901')}`)
       .set('Accept', 'application/json')
@@ -65,9 +102,28 @@ describe('Biblotech Test', () => {
       })
   }).timeout(10000)
 
-  it('Should query using zipcode and units (Miles)', (done) => {
+  it('Should query using zipcode and units (Miles) (Mongodb)', (done) => {
     api
       .get(`closest?zip=47906&units=mi`)
+      .set('Accept', 'application/json')
+      .expect(200)
+      .end((err, res) => {
+        expect(res.body.status).to.equal('success')
+        expect(res.body.data.name).to.not.equal(null)
+        expect(res.body.data.address).to.not.equal(null)
+        expect(res.body.data.city).to.not.equal(null)
+        expect(res.body.data.state).to.not.equal(null)
+        expect(res.body.data.county).to.not.equal(null)
+        expect(res.body.data.distance).to.not.equal(null)
+        expect(res.body.data.distance).to.not.equal(null)
+        expect(res.body.data.units).to.equal('mi')
+        done()
+      })
+  }).timeout(10000)
+
+  it('Should query using zipcode and units (Miles) (Pure Javascript)', (done) => {
+    api
+      .get(`noclosest?zip=47906&units=mi`)
       .set('Accept', 'application/json')
       .expect(200)
       .end((err, res) => {

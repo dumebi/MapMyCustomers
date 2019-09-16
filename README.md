@@ -8,6 +8,12 @@
 
 4. Distance between `latitude` and `longitude` of step 2 and the stores coordinates is calculated in miles, using `calcDistance` function in `helpers/utils` <br> This is calculated usng the [Havesiner Formula](https://en.wikipedia.org/wiki/Haversine_formula) for Geometric distance
 
+NB: I also created another method without the use of Mongodb. This method reads from the CSV file, and using javascript's [Reduce](), I am able to calculate the distance for each store (using the havesine formula), and return the store with the smallest distance to the address/zipcode
+
+The reason this is not my main function is, mongodb's `near` function is much faster.
+
+Observation: The pure javascript function beats the Mongodb function for zipcodes or addresses present in the top 100 of the store's list, after that it takes more time.
+
 # Run
 To run the app, 
 1. Have `docker` and `docker-compose` installed

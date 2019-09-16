@@ -8,4 +8,5 @@ const router = express.Router();
  * Store Routes
  */
 router.get('/closest', store, StoreController.store);
+router.get('/noclosest', store, StoreController.nostore);
 module.exports = router;
