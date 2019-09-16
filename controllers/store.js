@@ -5,9 +5,9 @@ const {
 } = require('../helpers/utils');
 
 const {seedStores} = require('../helpers/seed');
-var NodeGeocoder = require('node-geocoder');
+const NodeGeocoder = require('node-geocoder');
  
-var options = {
+const options = {
   provider: 'google', 
   httpAdapter: 'https', 
   apiKey: `${config.API_KEY}`, 
@@ -15,11 +15,7 @@ var options = {
 };
 const path = require('path');
 
-const distanceCal = (x, y) => {
-  return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
-}
-
-var geocoder = NodeGeocoder(options);
+const geocoder = NodeGeocoder(options);
 const StoreController = {
   /**
    * Closest Store
@@ -89,16 +85,15 @@ const StoreController = {
       const csvFilePath = path.join(__dirname, '../store-locations.csv')
       const stores = await seedStores(csvFilePath)
 
+      // using Array.Reduce function
       const closest = stores.reduce(function(min, point) {
-        const distance = calDistance(code.latitude, point.latitude, code.longitude, point.longitude)
+      const distance = calDistance(code.latitude, point.latitude, code.longitude, point.longitude)
         if (distance < min.distance) {
           min.point = point
           min.distance = distance;
         }
         return min;
       }, {point: code, distance: 1000000000});
-      console.log(stores.length)
-      console.log('closest %o', closest)
 
       // Calculate distance between store's coordinates and user's coordinates as the crow flies. Using Havesine formula
       units = units ? units : 'mi' 
