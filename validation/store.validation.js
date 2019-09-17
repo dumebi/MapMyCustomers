@@ -4,8 +4,14 @@ const {
   handleError
 } = require('../helpers/utils');
 
+/**
+ * StoreValidation
+ * @description Validates Query against zip, addressa and units
+ * @returns {Object} Store
+ */
 exports.store = async (req, res, next) => {
   try {
+    // Makes sure either zip or address is passed, but not both at the same time
     const schema = Joi.object().keys({
       zip: Joi.string(),
       address: Joi.string(),
@@ -13,10 +19,8 @@ exports.store = async (req, res, next) => {
     }).xor('zip', 'address').label('Query');
     const schemaVal = await schema.validate(req.query);
     if(schemaVal.error) throw schemaVal.error
-    // console.log(schemaVal)
     next()
   } catch (error) {
-    console.log(error)
     return handleError(res, HttpStatus.PRECONDITION_FAILED, error.details[0].message, null)
   }
 }

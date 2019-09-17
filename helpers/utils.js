@@ -1,5 +1,10 @@
 require('dotenv').config();
 
+/**
+ * Application Config
+ * @description Appplication config variables gotten from process.env
+ * @returns {null}
+ */
 exports.config = {
   jwt: process.env.JWT_SECRET,
   mongo: `${process.env.MONGO_LAB_DEV}`,
@@ -8,17 +13,29 @@ exports.config = {
   API_KEY: process.env.API_KEY
 }
 
-// Convert degrees to radians
+/**
+ * Degree to Radian
+ * @description Convert degrees to radians
+ * @returns {Float} radian
+ */
 exports.deg2rad = (deg) => {
   return deg * (Math.PI/180)
 },
 
-// Convert miles to km
+/**
+ * Miles to Kilometers
+ * @description Convert miles to km
+ * @returns {Float} KM
+ */
 exports.toKm = (miles) => {
   return miles * 1.60934
 },
 
-// Havesine Formula
+/**
+ * Calculate Distance
+ * @description calculates geometric distance of two points using Havesine Formula
+ * @returns {Float} KM
+ */
 exports.calDistance = (lat1, lat2, lon1, lon2) => {
   var R = 3958.8; // Radius of the earth in km
   var φ1 = this.deg2rad(lat1);
@@ -35,6 +52,12 @@ exports.calDistance = (lat1, lat2, lon1, lon2) => {
   return d
 },
 
+
+/**
+ * Handle Error
+ * @description Error Handler, returns error details in specified JSON format
+ * @returns {Object} error
+ */
 exports.handleError = (res, code, message, err) => {
   console.log(err)
   return res.status(parseInt(code, 10)).json({
@@ -43,6 +66,11 @@ exports.handleError = (res, code, message, err) => {
   })
 }
 
+/**
+ * Handle Success
+ * @description Success Handler, returns success details in specified JSON format
+ * @returns {Object} details
+ */
 exports.handleSuccess = (res, code, data) => {
   return res.status(parseInt(code, 10)).json({
     status: 'success',

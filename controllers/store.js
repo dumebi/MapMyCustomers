@@ -4,9 +4,10 @@ const {
   handleError, handleSuccess, toKm, calDistance, config
 } = require('../helpers/utils');
 
-const {seedStores} = require('../helpers/seed');
+const {getStores} = require('../helpers/seed');
 const NodeGeocoder = require('node-geocoder');
  
+// node-geocoder options
 const options = {
   provider: 'google', 
   httpAdapter: 'https', 
@@ -18,8 +19,8 @@ const path = require('path');
 const geocoder = NodeGeocoder(options);
 const StoreController = {
   /**
-   * Closest Store
-   * @description return the closest store via query
+   * Closest Store (Mongodb)
+   * @description return the closest store via query (using Mongodb)
    * @returns {Object} Store
    */
   store: async (req, res) => {
@@ -32,9 +33,12 @@ const StoreController = {
       if(zip) query.address = zip
       if(address) query.address = address
 
+      // Decode passed in address/ ziocode
       let code = await geocoder.geocode(query)
       code = code[0]
       const zip_address_message = zip ? 'zip code does not exist' : 'address does not exist' 
+
+      // return error details using our error handler
       if(!code) return handleError(res, HttpStatus.BAD_REQUEST, zip_address_message, null)
       
       // Mongodb's coordinate comparison
@@ -56,6 +60,7 @@ const StoreController = {
       units = units ? units : 'mi' 
       distance = units == 'km' ?  toKm(distance) : distance
 
+      // Return store details
       return handleSuccess(res, HttpStatus.OK, { name: store.name, address: store.address, city: store.city, state: store.state, county: store.county, distance, units}, 'stores gotten successfully')
     } catch (error) {
       return handleError(res, HttpStatus.INTERNAL_SERVER_ERROR, 'An error occured getting all stores, please contact an administrator', error)
@@ -63,8 +68,8 @@ const StoreController = {
   },
 
   /**
-   * Closest Store
-   * @description return the closest store via query
+   * Closest Store (JS)
+   * @description return the closest store via query (using Javascript)
    * @returns {Object} Store
    */
   nostore: async (req, res) => {
@@ -82,8 +87,9 @@ const StoreController = {
       const zip_address_message = zip ? 'zip code does not exist' : 'address does not exist' 
       if(!code) return handleError(res, HttpStatus.BAD_REQUEST, zip_address_message, null)
       
+      // convert locations to JSON from CSV file
       const csvFilePath = path.join(__dirname, '../store-locations.csv')
-      const stores = await seedStores(csvFilePath)
+      const stores = await getStores(csvFilePath)
 
       // using Array.Reduce function
       const closest = stores.reduce(function(min, point) {

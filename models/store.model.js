@@ -9,6 +9,7 @@ const StoreSchema = new Schema (
     city: { type: Schema.Types.String, required: true },
     state: { type: Schema.Types.String, required: true },
     zip_code: { type: Schema.Types.String, required: true },
+    // MongoDB Geometric format
     geo: {
       type: {
         type: String, 
@@ -25,6 +26,7 @@ const StoreSchema = new Schema (
   },
   { timestamps: true }, { toObject: { virtuals: true }, toJSON: { virtuals: true } }
 )
+// MongoDB Geometric index
 StoreSchema.index({ "geo": "2dsphere"});
 const Store = model('Store', StoreSchema)
 

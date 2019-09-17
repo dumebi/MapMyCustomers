@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const utils = require('../helpers/utils');
+const {config} = require('../helpers/utils');
 require('dotenv').config();
 
 // Mongodb config
@@ -7,7 +7,7 @@ module.exports = {
   mongo() {
     mongoose.promise = global.promise;
     mongoose
-      .connect(utils.config.mongo, {
+      .connect(config.mongo, {
         keepAlive: true,
         useNewUrlParser: true,
         useCreateIndex: true,
