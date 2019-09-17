@@ -4,7 +4,7 @@ const {
   handleError, handleSuccess, toKm, calDistance, config
 } = require('../helpers/utils');
 
-const {getStores} = require('../helpers/seed');
+const {all_stores} = require('../helpers/seed');
 const NodeGeocoder = require('node-geocoder');
  
 // node-geocoder options
@@ -23,7 +23,7 @@ const StoreController = {
    * @description return the closest store via query (using Mongodb)
    * @returns {Object} Store
    */
-  store: async (req, res) => {
+  store_mongo: async (req, res) => {
     try {
       let { zip, address, units } = req.query
 
@@ -72,7 +72,7 @@ const StoreController = {
    * @description return the closest store via query (using Javascript)
    * @returns {Object} Store
    */
-  nostore: async (req, res) => {
+  store_js: async (req, res) => {
     try {
       let { zip, address, units } = req.query
 
@@ -88,9 +88,7 @@ const StoreController = {
       if(!code) return handleError(res, HttpStatus.BAD_REQUEST, zip_address_message, null)
       
       // convert locations to JSON from CSV file
-      const csvFilePath = path.join(__dirname, '../store-locations.csv')
-      const stores = await getStores(csvFilePath)
-
+      const stores = all_stores()
       // using Array.Reduce function
       const closest = stores.reduce(function(min, point) {
       const distance = calDistance(code.latitude, point.latitude, code.longitude, point.longitude)

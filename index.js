@@ -34,6 +34,8 @@ app.use((req, res, next) => {
   // Seed stores from CSV file into MongoDB
   const csvFilePath = './store-locations.csv'
   await seedStores(csvFilePath)
+  // await getStores(csvFilePath)
+  console.log('seeded')
 })()
 
 app.listen(3000, () => console.log(`Open http://localhost:3000 to see a response.`));

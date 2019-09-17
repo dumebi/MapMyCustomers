@@ -15,8 +15,8 @@ describe('Biblotech Test', () => {
     api
       .get(`closest?zip=55811-1810`)
       .set('Accept', 'application/json')
-      .expect(200)
       .end((err, res) => {
+        expect(res.status).to.equal(200)
         expect(res.body.status).to.equal('success')
         expect(res.body.data.name).to.equal('Duluth')
         expect(res.body.data.address).to.equal('1902 Miller Trunk Hwy')
@@ -33,8 +33,8 @@ describe('Biblotech Test', () => {
     api
       .get(`closest?zip=55811-1810`)
       .set('Accept', 'application/json')
-      .expect(200)
       .end((err, res) => {
+        expect(res.status).to.equal(200)
         expect(res.body.status).to.equal('success')
         expect(res.body.data.name).to.equal('Duluth')
         expect(res.body.data.address).to.equal('1902 Miller Trunk Hwy')
@@ -52,8 +52,8 @@ describe('Biblotech Test', () => {
     api
       .get(`closest?address=${encodeURI('731 Lawrence St. San Angelo, TX 76901')}`)
       .set('Accept', 'application/json')
-      .expect(200)
       .end((err, res) => {
+        expect(res.status).to.equal(200)
         expect(res.body.status).to.equal('success')
         expect(res.body.data.name).to.not.equal(null)
         expect(res.body.data.address).to.not.equal(null)
@@ -70,8 +70,8 @@ describe('Biblotech Test', () => {
     api
       .get(`closest?address=${encodeURI('731 Lawrence St. San Angelo, TX 76901')}`)
       .set('Accept', 'application/json')
-      .expect(200)
       .end((err, res) => {
+        expect(res.status).to.equal(200)
         expect(res.body.status).to.equal('success')
         expect(res.body.data.name).to.not.equal(null)
         expect(res.body.data.address).to.not.equal(null)
@@ -88,8 +88,8 @@ describe('Biblotech Test', () => {
     api
       .get(`closest?zip=47906&units=km`)
       .set('Accept', 'application/json')
-      .expect(200)
       .end((err, res) => {
+        expect(res.status).to.equal(200)
         expect(res.body.status).to.equal('success')
         expect(res.body.data.name).to.not.equal(null)
         expect(res.body.data.address).to.not.equal(null)
@@ -106,8 +106,8 @@ describe('Biblotech Test', () => {
     api
       .get(`closest?zip=47906&units=mi`)
       .set('Accept', 'application/json')
-      .expect(200)
       .end((err, res) => {
+        expect(res.status).to.equal(200)
         expect(res.body.status).to.equal('success')
         expect(res.body.data.name).to.not.equal(null)
         expect(res.body.data.address).to.not.equal(null)
@@ -125,8 +125,8 @@ describe('Biblotech Test', () => {
     api
       .get(`noclosest?zip=47906&units=mi`)
       .set('Accept', 'application/json')
-      .expect(200)
       .end((err, res) => {
+        expect(res.status).to.equal(200)
         expect(res.body.status).to.equal('success')
         expect(res.body.data.name).to.not.equal(null)
         expect(res.body.data.address).to.not.equal(null)
@@ -136,42 +136,6 @@ describe('Biblotech Test', () => {
         expect(res.body.data.distance).to.not.equal(null)
         expect(res.body.data.distance).to.not.equal(null)
         expect(res.body.data.units).to.equal('mi')
-        done()
-      })
-  }).timeout(10000)
-
-  it('Should flag wrong zipcode', (done) => {
-    api
-      .get(`closest?zip=655637748`)
-      .set('Accept', 'application/json')
-      .expect(200)
-      .end((err, res) => {
-        expect(res.body.status).to.equal('error')
-        expect(res.body.message).to.equal('zip code does not exist')
-        done()
-      })
-  }).timeout(10000)
-
-  it('Should flag no query parameter passed', (done) => {
-    api
-      .get(`closest`)
-      .set('Accept', 'application/json')
-      .expect(200)
-      .end((err, res) => {
-        expect(res.body.status).to.equal('error')
-        expect(res.body.message).to.equal('"Query" must contain at least one of [zip, address]' )
-        done()
-      })
-  }).timeout(10000)
-
-  it('Should flag wrong query parameter passed', (done) => {
-    api
-      .get(`closest?zipaddress=100`)
-      .set('Accept', 'application/json')
-      .expect(200)
-      .end((err, res) => {
-        expect(res.body.status).to.equal('error')
-        expect(res.body.message).to.equal('"zipaddress" is not allowed')
         done()
       })
   }).timeout(10000)
@@ -186,6 +150,42 @@ describe('Biblotech Test', () => {
     } catch (error) {
       console.log(error)
     }
+  }).timeout(10000)
+
+  it('Should flag wrong zipcode', (done) => {
+    api
+      .get(`closest?zip=655637748`)
+      .set('Accept', 'application/json')
+      .end((err, res) => {
+        expect(res.status).to.equal(400)
+        expect(res.body.status).to.equal('error')
+        expect(res.body.message).to.equal('zip code does not exist')
+        done()
+      })
+  }).timeout(10000)
+
+  it('Should flag no query parameter passed', (done) => {
+    api
+      .get(`closest`)
+      .set('Accept', 'application/json')
+      .end((err, res) => {
+        expect(res.status).to.equal(412)
+        expect(res.body.status).to.equal('error')
+        expect(res.body.message).to.equal('"Query" must contain at least one of [zip, address]' )
+        done()
+      })
+  }).timeout(10000)
+
+  it('Should flag wrong query parameter passed', (done) => {
+    api
+      .get(`closest?zipaddress=100`)
+      .set('Accept', 'application/json')
+      .end((err, res) => {
+        expect(res.status).to.equal(412)
+        expect(res.body.status).to.equal('error')
+        expect(res.body.message).to.equal('"zipaddress" is not allowed')
+        done()
+      })
   }).timeout(10000)
 })
 

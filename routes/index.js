@@ -9,7 +9,7 @@ const router = express.Router();
  */
 
 // Using MongoDB
-router.get('/closest', store, StoreController.store);
+router.get('/closest', store, StoreController.store_mongo);
 // Using pureJS
-router.get('/noclosest', store, StoreController.nostore);
+router.get('/noclosest', store, StoreController.store_js);
 module.exports = router;
